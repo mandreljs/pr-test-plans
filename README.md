@@ -2,7 +2,7 @@
 
 Step-by-step manual test plans for [Mandrel.js](https://github.com/mandreljs/mandrel.js) pull requests, published at **https://mandreljs.github.io/pr-test-plans/**.
 
-A test plan walks someone through checking a change by hand, written so that anyone can follow it, not just developers. Testers mark each test Pass, Fail, Blocked or Skip, add notes, and copy their results as markdown to paste back into the pull request. Results save in the tester's browser, so they can stop and come back.
+A test plan walks a developer through checking a change by hand, step by step, without needing to know the code it changes. Mandrel.js has no preview builds of pull requests, so testers run the pull request themselves. Testers mark each test Pass, Fail, Blocked or Skip, add notes, and copy their results as markdown to paste back into the pull request. Results save in the tester's browser, so they can stop and come back.
 
 Plans are usually written by the `routine-pr-human-review-plan` Claude Code skill in the engine's repo (`mandreljs/mandrel.js`, in `.claude/skills/`), but you can write or edit one by hand too.
 

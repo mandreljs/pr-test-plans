@@ -12,17 +12,13 @@
   ],
   "setup": [
     {
-      "title": "Install the tools",
-      "body": "You need **Git** (https://git-scm.com/downloads) and **Node.js 24 or newer** (https://nodejs.org/). Install both with their default options, then open a new terminal: Terminal on Mac, or **Git Bash** on Windows."
-    },
-    {
-      "title": "Get the pull request's code",
-      "body": "Paste these lines into the terminal and press Enter. They download the engine and switch it to this pull request's changes.",
-      "code": "git clone https://github.com/mandreljs/mandrel.js.git\ncd mandrel.js\ngit fetch origin pull/123/head:pr-123\ngit checkout pr-123"
+      "title": "Check out the commit this plan was written for",
+      "body": "In a clone of `mandreljs/mandrel.js` (Node.js 24 or newer). This works for pull requests from forks too.",
+      "code": "git fetch origin pull/123/head\ngit checkout 0123456789abcdef0123456789abcdef01234567"
     },
     {
       "title": "Install and start the game",
-      "body": "Run these in the same terminal. `npm run setup` downloads the map compiler, which takes a minute the first time. The last command keeps running; leave the terminal open while you test.",
+      "body": "`npm run setup` downloads the map compiler the first time and does nothing after that. `npm run dev` keeps running while you test.",
       "code": "npm install\nnpm run setup\nnpm run dev"
     },
     {

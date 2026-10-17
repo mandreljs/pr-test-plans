@@ -67,6 +67,6 @@ Two kinds of change land here:
 
 - Plain modern JavaScript (ES modules), no TypeScript. Match the existing style: 2-space indent, double quotes, trailing commas.
 - Styling uses the CSS custom properties at the top of `styles.css` (cream/ink/gold/terra, Radley + Inter, still the HelloAO look it was copied with). Every color is a token with a light and a dark value; never hard-code a color in a component rule. The dark values are written twice, once under `prefers-color-scheme: dark` (for "System") and once under `:root[data-theme="dark"]` (the manual switch), and the two blocks must stay identical. The Theme dropdown stores the choice in `localStorage` (`pr-test-plans:theme`), and an inline script in `index.html`'s `<head>` applies it before the stylesheet loads, so a dark-mode user never sees a flash of the light theme.
-- Page copy is written for non-developers: plain words, name things by what people see, error messages say what went wrong and what to do next.
+- Page copy is plain: plain words, name things by what people see, error messages say what went wrong and what to do next.
 - Tests (`tests/*.test.js`, `node:test`) assert observable output: validation messages, generated markdown, the index file, CLI exit codes. Add a test for every format rule or markdown change, and cover the invalid case, not just the happy path.
 - Only add comments when the _why_ isn't obvious from the code.
