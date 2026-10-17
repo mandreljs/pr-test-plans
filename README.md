@@ -96,7 +96,7 @@ The preview server ([`tools/serve.mjs`](tools/serve.mjs)) needs no install. It t
 
 ## Where this came from
 
-This repo is a copy of [HelloAOLab/pr-test-plans](https://github.com/HelloAOLab/pr-test-plans), with its plans left out and its names and examples changed for Mandrel.js. The viewer's look (palette and fonts) is still HelloAO's.
+This repo is a copy of [HelloAOLab/pr-test-plans](https://github.com/HelloAOLab/pr-test-plans), with its plans left out and its names and examples changed for Mandrel.js.
 
 ## License
 

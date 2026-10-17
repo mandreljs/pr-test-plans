@@ -1,70 +1,70 @@
-/* Layout: one reading column; on a plan, a sticky progress bar keeps the result count and Copy button in reach. Palette and type come from the HelloAO test plans site this one was copied from. */
+/* Layout: one reading column; on a plan, a sticky progress bar keeps the result count and Copy button in reach. The look follows Mandrel.js's game client: near-black gunmetal, monospace HUD text, hard edges, and a rust-orange accent from mid-90s shooters. */
 :root {
-  --bg: #fbf3ea;
-  --surface: #fffdf9;
-  --surface-2: #f3e7d8;
-  --fg: #241f1a;
-  --muted: #5c5449;
-  --line: #e5d7c5;
-  --accent: #c08a3e;
-  --accent-ink: #241f1a;
-  --link: #93411f;
-  --pass: #2c6e45;
-  --pass-bg: #e1efe3;
-  --fail: #a8361d;
-  --fail-bg: #f8e1d8;
-  --blocked: #8f6223;
-  --blocked-bg: #f6e7c8;
-  --skip: #5c5449;
-  --skip-bg: #ece2d4;
-  --font-display: "Radley", Georgia, "Times New Roman", serif;
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --radius: 10px;
+  --bg: #e8e8ec;
+  --surface: #f6f6f8;
+  --surface-2: #dcdce2;
+  --fg: #16161a;
+  --muted: #52525c;
+  --line: #c6c6ce;
+  --accent: #c2410c;
+  --accent-ink: #ffffff;
+  --link: #a3360a;
+  --pass: #1f7a3d;
+  --pass-bg: #d8eedd;
+  --fail: #b42318;
+  --fail-bg: #f7dcd8;
+  --blocked: #8a5a00;
+  --blocked-bg: #f3e6c4;
+  --skip: #52525c;
+  --skip-bg: #dcdce2;
+  --font-display: "Chakra Petch", "Segoe UI", Roboto, sans-serif;
+  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 3px;
   color-scheme: light;
 }
 /* Dark values appear twice: once for "System" on a dark device (unless the
    viewer picked Light), once for an explicit Dark choice. Keep them identical. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #18120c;
-    --surface: #221a12;
-    --surface-2: #2d2319;
-    --fg: #f1eadf;
-    --muted: #c3b6a3;
-    --line: #3a2e22;
-    --accent: #d9ac68;
-    --accent-ink: #231a12;
-    --link: #eed09d;
-    --pass: #8fd4a6;
-    --pass-bg: #18291d;
-    --fail: #f29a80;
-    --fail-bg: #3a1c13;
-    --blocked: #eec47e;
-    --blocked-bg: #33260f;
-    --skip: #c3b6a3;
-    --skip-bg: #2a2219;
+    --bg: #101014;
+    --surface: #18181e;
+    --surface-2: #22222a;
+    --fg: #e8e8ec;
+    --muted: #9d9da8;
+    --line: #2e2e38;
+    --accent: #ff7a1a;
+    --accent-ink: #160c02;
+    --link: #ff9d57;
+    --pass: #5fd38a;
+    --pass-bg: #10261a;
+    --fail: #ff6b5b;
+    --fail-bg: #2e1210;
+    --blocked: #f2b84b;
+    --blocked-bg: #2b2110;
+    --skip: #9d9da8;
+    --skip-bg: #22222a;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #18120c;
-  --surface: #221a12;
-  --surface-2: #2d2319;
-  --fg: #f1eadf;
-  --muted: #c3b6a3;
-  --line: #3a2e22;
-  --accent: #d9ac68;
-  --accent-ink: #231a12;
-  --link: #eed09d;
-  --pass: #8fd4a6;
-  --pass-bg: #18291d;
-  --fail: #f29a80;
-  --fail-bg: #3a1c13;
-  --blocked: #eec47e;
-  --blocked-bg: #33260f;
-  --skip: #c3b6a3;
-  --skip-bg: #2a2219;
+  --bg: #101014;
+  --surface: #18181e;
+  --surface-2: #22222a;
+  --fg: #e8e8ec;
+  --muted: #9d9da8;
+  --line: #2e2e38;
+  --accent: #ff7a1a;
+  --accent-ink: #160c02;
+  --link: #ff9d57;
+  --pass: #5fd38a;
+  --pass-bg: #10261a;
+  --fail: #ff6b5b;
+  --fail-bg: #2e1210;
+  --blocked: #f2b84b;
+  --blocked-bg: #2b2110;
+  --skip: #9d9da8;
+  --skip-bg: #22222a;
   color-scheme: dark;
 }
 
@@ -77,15 +77,20 @@
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--muted);
 }
 .theme-row select {
   font: inherit;
+  text-transform: none;
+  letter-spacing: 0;
   color: var(--fg);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: 4px 8px;
 }
 .theme-row select:focus-visible {
@@ -103,6 +108,7 @@ body {
   font-family: var(--font-body);
   font-size: 15px;
   line-height: 1.55;
+  border-top: 3px solid var(--accent);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 [hidden] {
@@ -118,6 +124,7 @@ body {
 }
 a {
   color: var(--link);
+  text-underline-offset: 2px;
 }
 a:focus-visible,
 button:focus-visible,
@@ -131,7 +138,7 @@ code {
   font-size: 0.88em;
   background: var(--surface-2);
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 2px;
   padding: 0.05em 0.35em;
   overflow-wrap: anywhere;
 }
@@ -140,7 +147,8 @@ pre {
   overflow-x: auto;
   background: var(--surface-2);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
   padding: 10px 12px;
 }
 pre code {
@@ -173,26 +181,29 @@ header {
   gap: 12px;
 }
 .eyebrow {
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--accent);
 }
 .eyebrow a {
   color: inherit;
 }
 header h1 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(30px, 5.5vw, 42px);
-  line-height: 1.12;
+  font-weight: 700;
+  font-size: clamp(28px, 5.5vw, 40px);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
 }
 .meta {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 16px;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   color: var(--muted);
 }
 .meta span {
@@ -236,7 +247,8 @@ header h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 10px;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 .progress-label strong {
@@ -244,10 +256,10 @@ header h1 {
 }
 .meter {
   display: flex;
-  height: 6px;
-  border-radius: 3px;
+  height: 8px;
   overflow: hidden;
   background: var(--surface-2);
+  border: 1px solid var(--line);
 }
 .meter span {
   display: block;
@@ -271,7 +283,8 @@ header h1 {
   gap: 8px;
 }
 .toast {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   color: var(--muted);
   flex-basis: 100%;
 }
@@ -280,11 +293,13 @@ header h1 {
 }
 
 button {
-  font: inherit;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
-  border-radius: 8px;
-  padding: 8px 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  padding: 7px 14px;
   cursor: pointer;
   border: 1px solid var(--line);
   background: var(--surface);
@@ -299,7 +314,7 @@ button.primary {
   color: var(--accent-ink);
 }
 button.primary:hover {
-  filter: brightness(1.06);
+  filter: brightness(1.08);
 }
 button.danger[data-armed="true"] {
   background: var(--fail-bg);
@@ -308,19 +323,23 @@ button.danger[data-armed="true"] {
 }
 .link-button {
   display: inline-block;
+  font-family: var(--font-display);
   font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   text-decoration: none;
   background: var(--accent);
   color: var(--accent-ink);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 9px 16px;
 }
 
 .notice {
   border: 1px solid var(--blocked);
+  border-left-width: 4px;
   background: var(--blocked-bg);
   color: var(--fg);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 10px 14px;
   font-size: 14px;
 }
@@ -330,8 +349,8 @@ button.danger[data-armed="true"] {
 }
 .problem h1 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 30px;
+  font-weight: 700;
+  font-size: 28px;
 }
 .problem ul {
   margin: 0;
@@ -363,9 +382,22 @@ section {
 }
 section > h2 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 26px;
+  font-weight: 700;
+  font-size: 20px;
   line-height: 1.2;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* A small square marker, like a HUD bullet. */
+section > h2::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
 }
 ol.setup {
   margin: 0;
@@ -377,6 +409,10 @@ ol.setup li {
   padding-left: 4px;
   min-width: 0;
 }
+ol.setup li::marker {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
 ol.setup li > * + * {
   margin-top: 6px;
 }
@@ -385,6 +421,7 @@ ol.setup li > * + * {
 }
 .section-setup {
   background: var(--surface-2);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 14px 18px;
   min-width: 0;
@@ -419,7 +456,7 @@ textarea {
   color: var(--fg);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 8px 10px;
   width: 100%;
   box-sizing: border-box;
@@ -430,16 +467,29 @@ textarea {
   field-sizing: content;
 }
 
-/* Test cards */
+/* Test cards. The left edge takes the color of the test's result. */
 .test {
   background: var(--surface);
   border: 1px solid var(--line);
+  border-left: 4px solid var(--line);
   border-radius: var(--radius);
   padding: 16px 18px;
   display: grid;
   gap: 12px;
   scroll-margin-top: 110px;
   min-width: 0;
+}
+.test:has(.pill[data-status="pass"]) {
+  border-left-color: var(--pass);
+}
+.test:has(.pill[data-status="fail"]) {
+  border-left-color: var(--fail);
+}
+.test:has(.pill[data-status="blocked"]) {
+  border-left-color: var(--blocked);
+}
+.test:has(.pill[data-status="skip"]) {
+  border-left-color: var(--skip);
 }
 .test-head {
   display: flex;
@@ -450,26 +500,29 @@ textarea {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
-  color: var(--muted);
-  background: var(--surface-2);
-  border-radius: 4px;
-  padding: 2px 6px;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  padding: 1px 6px;
   margin-top: 2px;
   flex: none;
 }
 .test-head h3 {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.35;
   flex: 1;
   min-width: 0;
 }
 .pill {
   flex: none;
-  font-size: 12px;
-  font-weight: 700;
-  border-radius: 999px;
-  padding: 2px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  padding: 3px 8px;
   background: var(--surface-2);
   color: var(--muted);
 }
@@ -494,9 +547,10 @@ textarea {
   font-size: 14px;
 }
 .label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 4px;
@@ -508,10 +562,14 @@ textarea {
   display: grid;
   gap: 4px;
 }
+.test ol li::marker {
+  font-family: var(--font-mono);
+  color: var(--muted);
+}
 .before {
   font-size: 14px;
   background: var(--surface-2);
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: 8px 12px;
 }
 
@@ -535,11 +593,14 @@ textarea {
 }
 .status span {
   display: inline-block;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 6px 14px;
+  border-radius: var(--radius);
+  padding: 5px 14px;
   background: var(--surface);
   color: var(--fg);
 }
@@ -610,9 +671,14 @@ details.preview textarea {
 .plan-list a {
   display: grid;
   gap: 2px;
-  padding-block: 12px;
+  padding: 12px 12px 12px 14px;
+  border-left: 3px solid transparent;
   text-decoration: none;
   color: var(--fg);
+}
+.plan-list a:hover {
+  background: var(--surface);
+  border-left-color: var(--accent);
 }
 .plan-list a:hover .plan-title {
   text-decoration: underline;
@@ -621,7 +687,8 @@ details.preview textarea {
   font-weight: 600;
 }
 .plan-meta {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
