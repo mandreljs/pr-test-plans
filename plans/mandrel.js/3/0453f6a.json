@@ -1,0 +1,422 @@
+{
+  "version": 1,
+  "project": "Mandrel.js",
+  "title": "feat: play demos dropped on the game page",
+  "summary": "Since the plan for commit `f978ba4`, playing a demo again from its end starts cleanly (no camera sweep, no leftover marks), a demo for a map the game doesn't have is refused without leaving the page, and 4x playback keeps its speed on slow frames. You can now watch a recorded demo by dragging its `.demo.json` file onto the game page. It plays on the map it was recorded on (the page reloads there first if needed), with **Space** to pause, the **left and right arrow** keys for speed from 1/4x to 4x, and **Esc** to go back to playing. The overlay says whether the playback still matches the recording tick by tick, flags the first tick where it doesn't, and says when the map or data has changed since the demo was recorded. This makes it possible to see what a golden demo actually does, and where a failing one goes wrong.",
+  "generatedAt": "2026-10-17T13:28:53Z",
+  "pr": {
+    "repo": "mandreljs/mandrel.js",
+    "number": 3,
+    "url": "https://github.com/mandreljs/mandrel.js/pull/3",
+    "branch": "feature/demo-playback",
+    "commit": "0453f6add820105d64ef07861a77741c5d61bd83"
+  },
+  "links": [
+    {
+      "label": "Pull request 3: feat: play demos dropped on the game page",
+      "url": "https://github.com/mandreljs/mandrel.js/pull/3"
+    },
+    {
+      "label": "Demos README on the PR branch (the new \"Watching one\" section)",
+      "url": "https://github.com/mandreljs/mandrel.js/blob/0453f6add820105d64ef07861a77741c5d61bd83/demos/README.md"
+    }
+  ],
+  "setup": [
+    {
+      "title": "Check out the commit this plan was written for",
+      "body": "In a clone of `mandreljs/mandrel.js` (Node.js 24 or newer). This checks out exactly the code this plan describes, even if more commits land on the PR later.",
+      "code": "git fetch origin pull/3/head\ngit checkout 0453f6add820105d64ef07861a77741c5d61bd83"
+    },
+    {
+      "title": "Install and start the game",
+      "body": "`npm run setup` downloads the map compiler the first time and does nothing after that. `npm run dev` keeps running while you test; use a second terminal for the other commands in this plan.",
+      "code": "npm install\nnpm run setup\nnpm run dev"
+    },
+    {
+      "title": "Open the game",
+      "body": "Open `http://localhost:5173/?map=greybox_01` in Chrome or Edge. The first load compiles the map, so it takes a moment. The overlay's first line should say `greybox_01.bsp` (the lit, compiled map). If it says `.map` instead, the map compiler isn't installed: run `npm run setup` again before testing."
+    },
+    {
+      "title": "Find the demo file you'll drop",
+      "body": "The demo the tests use is the repo's golden demo, `demos/greybox_01-2026-10-15-12-29-22.demo.json`, recorded on `greybox_01.bsp`. It's about 14.3 seconds long: the player walks from the start room into the far room, shoots both shotgunners with the pistol, and takes a little damage. Open the `demos` folder in your file manager (Finder, Explorer) so you can drag the file onto the browser window."
+    },
+    {
+      "title": "How to play",
+      "body": "Click inside the game to capture the mouse, and press **Esc** to get the pointer back. WASD moves, the mouse looks, **Space** jumps, click fires. **R** records a demo; **R** again saves it as a download."
+    },
+    {
+      "title": "Reporting a problem",
+      "body": "If something goes wrong while playing (not while watching), a demo replays it exactly: press **R**, make it happen again, press **R** again to download a `.demo.json`, and attach it to your results comment (zip it first if GitHub won't take the file). If a problem shows up while watching a demo, attach the demo you dropped and copy the overlay text and anything the browser console printed (open the console with **F12**, or **Cmd+Option+J** in Chrome on a Mac)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Watching the golden demo",
+      "intro": "Drop the golden demo on the map it was recorded on, so it plays straight away without reloading.",
+      "tests": [
+        {
+          "title": "Dropping the demo on its own map starts playback",
+          "why": "This is the main thing the pull request adds.",
+          "before": "The page is open at `http://localhost:5173/?map=greybox_01`, and the overlay says `greybox_01.bsp`.",
+          "steps": [
+            "Click inside the game and walk forward a few steps with **W**, so you're away from the start.",
+            "Press **Esc** to get the pointer back.",
+            "Drag `greybox_01-2026-10-15-12-29-22.demo.json` from your file manager and drop it on the game."
+          ],
+          "expected": [
+            "The page doesn't reload, and the browser doesn't open the file as text.",
+            "The view jumps back to the start room and starts moving on its own: you're watching the recording.",
+            "The overlay shows a line like `demo  0.5 / 14.3s  1x  playing`, with the first number counting up.",
+            "The overlay shows `every tick matches the recording`.",
+            "The bottom line reads `space to pause, left and right arrows for speed, escape to leave`."
+          ]
+        },
+        {
+          "title": "Playback shows the fight: shots, enemies, and getting hurt",
+          "why": "Playback is meant to show everything play shows, through the same effects. A missing effect here means playback skips part of what play draws.",
+          "before": "The demo from the previous test is playing (drop it again if it has ended).",
+          "steps": [
+            "Watch until the player reaches the far room with the two pillars and the raised platform.",
+            "Watch the shotgunners and the health in the overlay."
+          ],
+          "expected": [
+            "The two shotgunners (one on the floor, one on the platform) appear and move.",
+            "The pistol fires: marks appear where shots hit walls, and red marks where they hit a shotgunner. The marks fade after a short time.",
+            "When the player is shot, the screen flashes red, the view kicks, and the health in the overlay drops.",
+            "Both shotgunners die before the end."
+          ]
+        },
+        {
+          "title": "The camera turns smoothly with the recorded view",
+          "why": "The camera follows the angles recorded each tick, eased between ticks like position, so it should look as smooth as play.",
+          "steps": [
+            "Drop the demo again to restart it.",
+            "Watch the camera as the player turns, especially at quick turns."
+          ],
+          "expected": [
+            "The camera turns in the direction the player turned, without jumping or stuttering.",
+            "It never spins the long way round (a full turn in the wrong direction) on a quick turn."
+          ]
+        },
+        {
+          "title": "At the end, playback stops on the last frame and Space plays it again",
+          "steps": [
+            "Let the demo play to the end (about 14 seconds at 1x).",
+            "Wait a few seconds after it ends.",
+            "Press **Space**, watching the very first moment of the restart closely."
+          ],
+          "expected": [
+            "At the end the overlay shows `14.3 / 14.3s` and `ended`, and the picture stays still on the last frame.",
+            "`every tick matches the recording` is still shown at the end.",
+            "The bottom line reads `space to play again, escape to leave`.",
+            "After **Space**, the view cuts straight to the start room, with no sweep or flicker across the map, and the overlay says `playing`.",
+            "No shot marks, red blood marks, or red screen flash from the end of the first run are left showing as it starts again.",
+            "It still says `every tick matches the recording` as the second run plays."
+          ],
+          "why": "Changed since commit `f978ba4`: playing again used to sweep the camera for one frame from the far room to the start, and left the first run's shot marks and red flash on screen (code review No. 1). Now it starts from scratch, like the first drop."
+        },
+        {
+          "title": "Space pauses and resumes, and effects freeze while paused",
+          "why": "Effects (shot marks, the red hurt flash) now fade on the playback's own time, so pausing should freeze them too.",
+          "steps": [
+            "While the demo plays in the far room, press **Space** right after a shot leaves a mark on a wall.",
+            "Wait about 5 seconds.",
+            "Press **Space** again."
+          ],
+          "expected": [
+            "While paused, the picture doesn't move, the overlay says `paused`, and the time stops counting.",
+            "The shot marks stay as they were while paused, rather than fading away.",
+            "The bottom line says `space to play, ...` while paused.",
+            "After the second **Space**, playback carries on from the same moment and the marks continue fading."
+          ]
+        },
+        {
+          "title": "The arrow keys change speed from 1/4x to 4x",
+          "steps": [
+            "Drop the demo again to restart it at normal speed.",
+            "Press the **left arrow** three times, watching the speed in the overlay's `demo` line each time.",
+            "Press the **right arrow** six times, watching the speed each time."
+          ],
+          "expected": [
+            "Left arrow: the speed goes `1x` → `1/2x` → `1/4x`, then stays at `1/4x` on the third press.",
+            "Right arrow: it goes `1/2x` → `1x` → `2x` → `4x`, then stays at `4x`.",
+            "At `1/4x` the action is clearly slow motion and still smooth; at `4x` the 14.3 seconds play in about 3.6 seconds of real time (time it with a phone stopwatch from a restart at `4x`). If it takes clearly longer, note how long and what computer you used.",
+            "`every tick matches the recording` stays shown at every speed."
+          ],
+          "why": "Changed since commit `f978ba4`: on a slow frame, 4x used to fall behind while the overlay still said `4x` (code review No. 3). Now it should keep up even on a slower computer."
+        },
+        {
+          "title": "Clicking while watching doesn't capture the mouse",
+          "why": "While a demo plays, clicks are ignored, so that **Esc** always leaves playback instead of only freeing the mouse.",
+          "steps": [
+            "While the demo plays, click inside the game.",
+            "Move the mouse around, and press **W** and **2**."
+          ],
+          "expected": [
+            "The pointer stays visible and isn't captured.",
+            "Moving the mouse doesn't turn the camera; the camera only follows the recording.",
+            "**W** and **2** don't change anything you see."
+          ]
+        },
+        {
+          "title": "Esc leaves playback and goes back to playing",
+          "before": "A demo is playing (or paused).",
+          "steps": [
+            "Press **Esc**.",
+            "Click inside the game, then walk around and fire."
+          ],
+          "expected": [
+            "The level starts over in the start room, as if it had just loaded.",
+            "The overlay's demo lines are gone, and it shows `R to record a demo, or drop one here to watch it`.",
+            "Clicking captures the mouse again, and you can move, look, and fire as normal.",
+            "You're holding the weapon the level starts with, not one you pressed a key for while watching."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Dropping a demo on a different map",
+      "intro": "A demo always plays on the map and level file it was recorded on. If the page shows something else, it reloads there first.",
+      "tests": [
+        {
+          "title": "Dropping on another map reloads the page on the demo's map",
+          "steps": [
+            "Open `http://localhost:5173/?map=test_combat` and wait for it to load.",
+            "Drop `greybox_01-2026-10-15-12-29-22.demo.json` on the game."
+          ],
+          "expected": [
+            "The page reloads, and the address bar now says `?map=greybox_01`.",
+            "The overlay's first line says `greybox_01.bsp`.",
+            "The demo plays straight away after the reload, and the overlay says `every tick matches the recording`."
+          ]
+        },
+        {
+          "title": "A reload after watching doesn't play the demo again",
+          "why": "The dropped demo is carried across the reload in the browser's session storage, then removed, so only the first load plays it.",
+          "before": "You've just finished the previous test.",
+          "steps": [
+            "Press **Esc** to leave playback.",
+            "Reload the page (**Ctrl+R** on Windows, **Cmd+R** on a Mac)."
+          ],
+          "expected": [
+            "The page loads `greybox_01` for normal play, and no demo plays."
+          ]
+        },
+        {
+          "title": "Dropping a lit demo on the unlit map reloads with lighting back on",
+          "why": "The golden demo was recorded on the lit `.bsp`, which plays differently from the unlit `.map`, so the page switches to the `.bsp`. It should keep other URL options.",
+          "steps": [
+            "Open `http://localhost:5173/?map=greybox_01&lighting=off&brightness=2`.",
+            "Check that the overlay's first line says `greybox_01.map`.",
+            "Drop the golden demo on the game."
+          ],
+          "expected": [
+            "The page reloads, and the address bar has `map=greybox_01` and `brightness=2` but no `lighting=off`.",
+            "The overlay's first line says `greybox_01.bsp`, and the demo plays with `every tick matches the recording`."
+          ]
+        },
+        {
+          "title": "A demo you record on an unlit map plays back on that unlit map",
+          "steps": [
+            "Open `http://localhost:5173/?map=test_movement&lighting=off`.",
+            "Click inside the game and press **R**.",
+            "Walk and jump around for about 10 seconds, then press **R** again. The browser downloads a file whose name starts with `test_movement-` and ends in `.demo.json`.",
+            "Open `http://localhost:5173/?map=greybox_01`.",
+            "Drop the file you just downloaded on the game."
+          ],
+          "expected": [
+            "The page reloads, and the address bar says `map=test_movement` and `lighting=off`.",
+            "The overlay's first line says `test_movement.map`.",
+            "Your recording plays back as you played it, and the overlay says `every tick matches the recording` all the way to the end."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Demos it refuses or warns about",
+      "intro": "These tests drop files that can't play, or that no longer match. The game should keep running and say why in the overlay.",
+      "setup": [
+        {
+          "title": "Make the edited demos",
+          "body": "In a second terminal (on Windows, use Git Bash), from the repo root, run this. It writes five edited copies of the golden demo to a new `demo-tests` folder outside the repo: one claiming the weapons data changed, one with a wrong hash at tick 300, one from another game, one recorded at 30 ticks a second, and one for a map called `no_such_map`.",
+          "code": "node -e 'const fs=require(\"fs\"),src=\"demos/greybox_01-2026-10-15-12-29-22.demo.json\",out=\"../demo-tests\";fs.mkdirSync(out,{recursive:true});const load=()=>JSON.parse(fs.readFileSync(src,\"utf8\"));const save=(n,d)=>fs.writeFileSync(out+\"/\"+n+\".demo.json\",JSON.stringify(d));let d=load();d.content.weapons=\"00000000\";save(\"changed-weapons\",d);d=load();d.hashes=d.hashes.slice(0,300*8)+\"00000000\"+d.hashes.slice(301*8);save(\"bad-hash-300\",d);d=load();d.game=\"Some Other Game\";save(\"other-game\",d);d=load();d.tick_rate=30;save(\"30-ticks\",d);d=load();d.map=\"no_such_map\";save(\"no-such-map\",d);console.log(fs.realpathSync(out))'"
+        },
+        {
+          "title": "Open the game",
+          "body": "Open `http://localhost:5173/?map=greybox_01`, so the demos below play without a reload."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A demo whose data has changed starts paused and names what changed",
+          "steps": [
+            "Drop `changed-weapons.demo.json` from the `demo-tests` folder on the game.",
+            "Read the overlay, then press **Space**."
+          ],
+          "expected": [
+            "Before **Space**, the overlay says `paused` and shows a line `weapons changed since it was recorded, so it may not play as recorded`.",
+            "After **Space**, the demo plays. Only the label was edited, not the actual data, so it still shows `every tick matches the recording`."
+          ]
+        },
+        {
+          "title": "A tick that no longer matches is flagged at tick 300",
+          "steps": [
+            "Drop `bad-hash-300.demo.json` on the game.",
+            "Watch the overlay until about 5 seconds in, then let it play to the end.",
+            "Open the browser console (**F12**, or **Cmd+Option+J** in Chrome on a Mac)."
+          ],
+          "expected": [
+            "Until 5 seconds, the overlay says `every tick matches the recording`.",
+            "From then on it says `differs from the recording from tick 300 (5.00s)`.",
+            "The console has a warning `the demo differs from the recording from tick 300`.",
+            "The demo still plays to the end normally, since only the recorded check was changed."
+          ]
+        },
+        {
+          "title": "A demo from another game is refused",
+          "steps": [
+            "Drop `other-game.demo.json` on the game."
+          ],
+          "expected": [
+            "No demo plays, and the page doesn't reload.",
+            "The overlay's last line says `can't play the demo: it was recorded in Some Other Game, and this is Mandrel.js Example`.",
+            "You can still click in and play."
+          ]
+        },
+        {
+          "title": "A demo at another tick rate is refused",
+          "steps": [
+            "Drop `30-ticks.demo.json` on the game."
+          ],
+          "expected": [
+            "No demo plays.",
+            "The overlay's last line says `can't play the demo: the demo was recorded at 30 ticks a second, and the sim runs at 60`."
+          ]
+        },
+        {
+          "title": "A demo for a map the game doesn't have is refused without leaving the page",
+          "why": "New since commit `f978ba4`: such a demo used to reload the page onto a map that can't load, leaving only `failed to start` (code review No. 2). Now the page checks the map first.",
+          "before": "The page is open at `http://localhost:5173/?map=greybox_01`.",
+          "steps": [
+            "Drop `no-such-map.demo.json` from the `demo-tests` folder on the game.",
+            "Click inside the game and walk around."
+          ],
+          "expected": [
+            "The page doesn't reload, and the address bar still says `?map=greybox_01`.",
+            "The overlay's last line says `can't play the demo: this game has no no_such_map.bsp`.",
+            "No demo plays, and you can keep playing `greybox_01` as normal."
+          ]
+        },
+        {
+          "title": "A file that isn't a demo is refused",
+          "steps": [
+            "Drop `example/data/game.json` from the repo on the game.",
+            "Then drop a picture, such as any `.png` from `example/textures/dev/`."
+          ],
+          "expected": [
+            "For `game.json`, the overlay says `can't play that demo: not a demo: its \"format\" isn't \"mandreljs-demo\"`.",
+            "For the picture, the overlay says `can't play that demo:` followed by a reason (the browser's message about it not being JSON).",
+            "In both cases the browser doesn't open the file, the page doesn't reload, and you can keep playing.",
+            "The message stays in the overlay until you drop a demo that plays."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "In other browsers",
+      "intro": "Drag and drop, pointer capture, and session storage can behave differently between browsers.",
+      "tests": [
+        {
+          "title": "Watching works in Firefox",
+          "steps": [
+            "Open `http://localhost:5173/?map=test_combat` in Firefox.",
+            "Drop the golden demo on the game.",
+            "Press **Space** twice, the **right arrow** once, then **Esc**."
+          ],
+          "expected": [
+            "The page reloads on `greybox_01` and the demo plays with `every tick matches the recording`.",
+            "**Space** pauses and resumes, the speed becomes `2x`, and **Esc** goes back to playing.",
+            "Firefox doesn't open the file in a new tab instead of passing it to the game."
+          ]
+        },
+        {
+          "title": "Watching works in Safari (Mac only)",
+          "steps": [
+            "Open `http://localhost:5173/?map=test_combat` in Safari.",
+            "Drop the golden demo on the game, and watch it to the end.",
+            "Press **Esc**, click in, and play."
+          ],
+          "expected": [
+            "The page reloads on `greybox_01`, the demo plays to the end with `every tick matches the recording`, and Esc goes back to play with mouse capture working."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "How it looks",
+      "tests": [
+        {
+          "title": "Playback looks as smooth as playing, including on a high refresh-rate screen",
+          "why": "The sim runs 60 ticks a second and the picture eases between them. Playback should look like a smooth recording, not like a slideshow, at any screen rate.",
+          "steps": [
+            "If you have a screen above 60 Hz (such as 120 or 144 Hz), use it for this test.",
+            "Watch the golden demo at `1x`, then at `1/4x`.",
+            "Compare with how the same map looks when you play it yourself."
+          ],
+          "expected": [
+            "Movement and turning look smooth at both speeds. Note in your results anything that looks jerky, jumpy, or different from playing, and which speed and screen rate you used."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Recording a demo with R still works",
+          "steps": [
+            "Open `http://localhost:5173/?map=greybox_01`, click in, and press **R**.",
+            "Walk around for a few seconds, then press **R** again."
+          ],
+          "expected": [
+            "The level starts over on the first **R**, and the overlay shows `recording` with the seconds counting up.",
+            "The second **R** downloads a `.demo.json` file, and the overlay goes back to `R to record a demo, or drop one here to watch it`."
+          ]
+        },
+        {
+          "title": "Dropping a demo while recording stops the recording",
+          "why": "The intended behavior isn't stated in the PR; this is what the code does: it saves the recording in progress before playback starts.",
+          "steps": [
+            "Click in and press **R** to start recording.",
+            "Walk for a few seconds, press **Esc**, and drop the golden demo on the game."
+          ],
+          "expected": [
+            "The browser downloads the recording you'd started (a `greybox_01-...demo.json` file).",
+            "The golden demo plays, and the overlay no longer says `recording`. **R** does nothing while it plays."
+          ]
+        },
+        {
+          "title": "Dying and starting over still works after watching a demo",
+          "steps": [
+            "Watch a demo, then press **Esc**.",
+            "Play `greybox_01` until a shotgunner kills you.",
+            "Let go of every key, wait a second, then click."
+          ],
+          "expected": [
+            "When you die, the view drops to the floor and rolls over, and the overlay says `dead  (click or jump to start over)`.",
+            "Clicking starts the level over, and you can play normally."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "That the demo's hashes match exactly tick by tick is checked by the new unit tests (`apps/game-client/tests/game/demo-playback.test.ts`) and the existing golden demo test; testers only check what the overlay says.",
+    "The changes to `packages/sim/src/demo.ts` move the check for where a demo first differs into one shared piece (`DemoCheck`) used by both `npm test` replays and playback; the golden demo replay test and the new unit tests cover it.",
+    "The \"what differs at the next keyframe\" line can't be triggered by hand without actually changing how the game plays; it's covered by unit tests.",
+    "The case where the `.bsp` fails to compile while a `.bsp` demo is dropped (it should refuse instead of playing on the `.map`) needs a broken compiler, so it's left to the unit tests.",
+    "Dropping a demo on a release build (`npm run build`) isn't tested here; it uses the same page code as the dev server.",
+    "The commit message guideline change in `CLAUDE.md` and the changelog skill is documentation only.",
+    "A demo whose map exists but fails to compile (a leak, or ericw-tools missing) is also refused before reloading, with the compiler's reason; that needs a broken map, so it's left to the unit tests in `apps/game-client/tests/game/level-files.test.ts`."
+  ]
+}
