@@ -1,0 +1,16 @@
+{
+  "name": "pr-test-plans",
+  "private": true,
+  "type": "module",
+  "description": "Manual test plans for Mandrel.js pull requests, published with GitHub Pages.",
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "validate": "node tools/plan.mjs validate",
+    "index": "node tools/plan.mjs index plans plans/index.json",
+    "preview": "node tools/serve.mjs"
+  }
+}

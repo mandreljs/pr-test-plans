@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "project": "Mandrel.js",
+  "title": "Example: switch weapons with the mouse wheel",
+  "summary": "An example plan showing what the format can do. It lets players switch weapons with the mouse wheel: scrolling up picks the next weapon and scrolling down the previous one, as in Quake 3. The **1** and **2** keys still pick a weapon directly.",
+  "generatedAt": "2026-10-16T18:00:00Z",
+  "links": [
+    {
+      "label": "Plan format reference",
+      "url": "https://github.com/mandreljs/pr-test-plans#plan-format"
+    }
+  ],
+  "preview": {
+    "url": "https://mandreljs.github.io/mandrel.js/",
+    "label": "Open the example game"
+  },
+  "setup": [
+    {
+      "title": "Open the game",
+      "body": "Open the link above in a desktop browser (Chrome, Edge, Firefox or Safari). The first load takes a moment."
+    },
+    {
+      "title": "Capture the mouse",
+      "body": "Click inside the game. The pointer disappears and moving the mouse turns your view. Press **Esc** whenever you want the pointer back."
+    },
+    {
+      "title": "Find the weapon name",
+      "body": "The text over the game shows your health, then the weapon you're holding, such as **Pistol**. The tests below check that name."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Switching with the wheel",
+      "intro": "These tests check the new mouse wheel switching.",
+      "setup": [
+        {
+          "title": "Use a mouse with a scroll wheel",
+          "body": "These tests need a mouse wheel. A laptop trackpad's two-finger scroll works too, but one notch of a wheel is easier to count. Without either, mark these tests **Skip**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Scrolling up switches to the next weapon",
+          "why": "This is the main change in the pull request.",
+          "steps": [
+            "Press **1** to hold the pistol.",
+            "Scroll the mouse wheel up one notch."
+          ],
+          "expected": [
+            "The weapon name changes from **Pistol** to **Shotgun**."
+          ]
+        },
+        {
+          "title": "Scrolling down switches to the previous weapon",
+          "before": "You need the shotgun from the previous test.",
+          "steps": [
+            "Scroll the mouse wheel down one notch."
+          ],
+          "expected": [
+            "The weapon name changes from **Shotgun** back to **Pistol**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The number keys still switch weapons",
+          "before": "You need the pistol from the previous test.",
+          "steps": [
+            "Press **2**.",
+            "Press **1**."
+          ],
+          "expected": [
+            "The weapon name changes to **Shotgun** after you press 2, and back to **Pistol** after you press 1."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "How far a trackpad has to scroll to count as one step. That's covered by automated tests."
+  ]
+}

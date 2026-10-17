@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "project": "Mandrel.js",
+  "title": "Example: record a demo with the R key",
+  "summary": "A second example plan, for a different change, run on your own computer instead of a link. Pressing **R** while playing now records a demo: the level starts over, and pressing **R** again saves the recording as a file your browser downloads. Demos replay a game exactly, so a recording of a bug is the clearest way to report one.",
+  "generatedAt": "2026-10-16T19:00:00Z",
+  "links": [
+    {
+      "label": "Plan format reference",
+      "url": "https://github.com/mandreljs/pr-test-plans#plan-format"
+    }
+  ],
+  "setup": [
+    {
+      "title": "Install the tools",
+      "body": "You need **Git** (https://git-scm.com/downloads) and **Node.js 24 or newer** (https://nodejs.org/). Install both with their default options, then open a new terminal: Terminal on Mac, or **Git Bash** on Windows."
+    },
+    {
+      "title": "Get the pull request's code",
+      "body": "Paste these lines into the terminal and press Enter. They download the engine and switch it to this pull request's changes.",
+      "code": "git clone https://github.com/mandreljs/mandrel.js.git\ncd mandrel.js\ngit fetch origin pull/123/head:pr-123\ngit checkout pr-123"
+    },
+    {
+      "title": "Install and start the game",
+      "body": "Run these in the same terminal. `npm run setup` downloads the map compiler, which takes a minute the first time. The last command keeps running; leave the terminal open while you test.",
+      "code": "npm install\nnpm run setup\nnpm run dev"
+    },
+    {
+      "title": "Open the game",
+      "body": "Open `http://localhost:5173/?map=test_movement` in Chrome or Edge. Click inside the game to capture the mouse."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Recording",
+      "tests": [
+        {
+          "title": "R starts a recording from the start of the level",
+          "why": "This is the main change in the pull request.",
+          "steps": [
+            "Walk forward a few steps with **W**.",
+            "Press **R**."
+          ],
+          "expected": [
+            "You're back where the level starts, as if it had just loaded."
+          ]
+        },
+        {
+          "title": "R again saves the recording as a download",
+          "before": "You need the recording from the previous test.",
+          "steps": [
+            "Walk around for a few seconds.",
+            "Press **R** again."
+          ],
+          "expected": [
+            "Your browser downloads a file whose name ends in `.demo.json`.",
+            "The game keeps running."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "In Firefox",
+      "setup": [
+        {
+          "title": "Open the game in Firefox",
+          "body": "Leave the terminal running, and open `http://localhost:5173/?map=test_movement` in Firefox."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Recording works in Firefox too",
+          "steps": [
+            "Click inside the game, then press **R**.",
+            "Walk around for a few seconds, then press **R** again."
+          ],
+          "expected": [
+            "The level starts over when you first press R.",
+            "Firefox downloads a `.demo.json` file when you press R again."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Dying still starts the level over",
+          "steps": [
+            "Open `http://localhost:5173/?map=test_combat` and click inside the game.",
+            "Walk toward the enemy and let it shoot you until you die.",
+            "Wait a second, let go of every key, then click."
+          ],
+          "expected": [
+            "The view drops to the floor when you die.",
+            "Clicking starts the level over with full health."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Replaying a recorded demo. That's checked by the automated golden demo tests."
+  ]
+}
